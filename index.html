@@ -50,8 +50,9 @@
   #auth-screen {
     width: 100vw; height: 100vh;
     position: fixed; inset: 0; z-index: 10;
-    display: flex;
+    display: none; /* shown by JS only when no session */
   }
+  #auth-screen.visible { display: flex; }
 
   /* Background image fills entire screen */
   .auth-bg-img {
@@ -1120,7 +1121,7 @@ function bootApp() {
   if (!acc) { clearSession(); return; }
 
   // Show app, hide auth
-  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('auth-screen').classList.remove('visible');
   document.getElementById('app-shell').style.display = 'block';
 
   // Set dynamic start date from account
@@ -1767,8 +1768,10 @@ pickAuthImage(); // sets body bg from session image pool
   if (savedUser && getAccounts()[savedUser]) {
     bootApp();
     pickSessionImages();
+  } else {
+    // No valid session — show the auth screen
+    document.getElementById('auth-screen').classList.add('visible');
   }
-  // else auth screen is shown by default (display:flex already in HTML)
 })();
 </script>
 </body>
